@@ -24,6 +24,13 @@ function App() {
           <p>Qui andranno le canzoni e gli album in griglia</p>
         </section>
       </main>
+
+      {/* 3. PLAYER BAR (Basso) */}
+      <footer className="player-bar">
+        <div className="player-placeholder">
+          Il Player Audio andrà qui
+        </div>
+      </footer>
     </div>
   )
 }
