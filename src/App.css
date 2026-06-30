@@ -1,0 +1,21 @@
+/* RESET GLOBALE */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background-color: #000000;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* --- GRIGLIA PRINCIPALE --- */
+.spotify-layout{
+  display: grid;
+  grid-template-rows: 1fr 90px;
+  grid-template-columns: 240px 1fr;
+  height: 100vh;
+}
