@@ -20,6 +20,9 @@ function App() {
         <header className="main-header">
           <h1>Buongiorno</h1>
         </header>
+        <section className="content">
+          <p>Qui andranno le canzoni e gli album in griglia</p>
+        </section>
       </main>
     </div>
   )
