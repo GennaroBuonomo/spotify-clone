@@ -19,3 +19,28 @@ body{
   grid-template-columns: 240px 1fr;
   height: 100vh;
 }
+
+/* --- MACRO AREE --- */
+.sedebar{
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: #000000;
+  padding: 24px 24px 24px 12px;
+}
+
+.main-view {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  background-color: #121212;
+  border-radius: 8px;
+  margin: 8px 8px 0 0;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.player-bar{
+  grid-column: 1 / 3; 
+  grid-row: 2 / 3;
+  background-color: #000000;
+  border-top: 1px solid #282828;
+}
