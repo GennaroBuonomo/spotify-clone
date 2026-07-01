@@ -33,24 +33,41 @@ function App() {
     }
   };
 
-  // --- LOGICA DELLA BARRA DI AVANZAMENTO ---
   const handleTimeUpdate = () => {
     setCurrentTime(audioRef.current.currentTime);
   };
 
-  // Imposta la durata totale appena il file audio viene caricato
   const handleLoadedMetadata = () => {
     setDuration(audioRef.current.duration);
   };
 
-  // Permette di spostarsi avanti e indietro cliccando sulla barra
   const handleSeek = (e) => {
     const newTime = Number(e.target.value);
     audioRef.current.currentTime = newTime;
     setCurrentTime(newTime);
   };
 
-  // Utility per formattare i secondi in minuti:secondi (es. 0:00)
+  // --- LOGICA: AVANTI E INDIETRO ---
+  const handleNextSong = () => {
+    if (!currentSong) return;
+    // Troviamo la posizione della canzone attuale nell'array
+    const currentIndex = songsData.findIndex(song => song.id === currentSong.id);
+    // Calcoliamo il prossimo indice (se siamo all'ultima, torna alla prima)
+    const nextIndex = (currentIndex + 1) % songsData.length;
+    setCurrentSong(songsData[nextIndex]);
+    setIsPlaying(true);
+  };
+
+  const handlePrevSong = () => {
+    if (!currentSong) return;
+    const currentIndex = songsData.findIndex(song => song.id === currentSong.id);
+    // Calcoliamo l'indice precedente (se siamo alla prima, va all'ultima)
+    const prevIndex = (currentIndex - 1 + songsData.length) % songsData.length;
+    setCurrentSong(songsData[prevIndex]);
+    setIsPlaying(true);
+  };
+  // ----------------------------------------
+
   const formatTime = (timeInSeconds) => {
     if (isNaN(timeInSeconds)) return "0:00";
     const minutes = Math.floor(timeInSeconds / 60);
@@ -109,12 +126,14 @@ function App() {
               </div>
             </div>
 
-            {/* --- AREA CONTROLLI AGGIORNATA CON LA PROGRESS BAR --- */}
             <div className="player-controls">
+              {/* AREA BOTTONI  AVANTI/INDIETRO */}
               <div className="player-buttons">
+                <button className="control-btn skip-btn" onClick={handlePrevSong}>⏮</button>
                 <button className="control-btn play-pause-btn" onClick={togglePlayPause}>
                   {isPlaying ? '⏸' : '▶'}
                 </button>
+                <button className="control-btn skip-btn" onClick={handleNextSong}>⏭</button>
               </div>
               
               <div className="playback-bar">
@@ -147,7 +166,7 @@ function App() {
           src={currentSong?.audioUrl}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
-          onEnded={() => setIsPlaying(false)} // Ferma la musica alla fine
+          onEnded={handleNextSong} 
         />
       </footer>
 

@@ -273,9 +273,42 @@ body{
 }
 
 .playback-bar:hover .progress-slider::-webkit-slider-thumb {
-  opacity: 1; /* Appare quando sei con il mouse sulla barra */
+  opacity: 1; 
 }
 
 .playback-bar:hover .progress-slider {
-  background: #1db954; /* La barra diventa verde in hover! */
+  background: #1db954; 
+}
+
+/* --- PULSANTI DI CONTROLLO MEDIA --- */
+.player-buttons {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 4px;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.skip-btn {
+  color: #b3b3b3;
+  font-size: 1.2rem;
+}
+
+.skip-btn:hover {
+  color: #ffffff; 
+  transform: scale(1.05);
+}
+
+.play-pause-btn:active, .skip-btn:active {
+  transform: scale(0.95);
 }
