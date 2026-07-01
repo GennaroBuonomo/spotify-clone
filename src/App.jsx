@@ -3,12 +3,12 @@ import { songsData } from './songsData';
 import './App.css';
 
 function App() {
-  // --- STATI DEL PLAYER ---
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null); 
-
-  // --- LOGICA DI RIPRODUZIONE ---
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (isPlaying && audioRef.current) {
@@ -18,7 +18,6 @@ function App() {
     }
   }, [currentSong, isPlaying]);
 
-  
   const handlePlaySong = (song) => {
     if (currentSong?.id === song.id) {
       setIsPlaying(!isPlaying);
@@ -32,6 +31,31 @@ function App() {
     if (currentSong) {
       setIsPlaying(!isPlaying);
     }
+  };
+
+  // --- LOGICA DELLA BARRA DI AVANZAMENTO ---
+  const handleTimeUpdate = () => {
+    setCurrentTime(audioRef.current.currentTime);
+  };
+
+  // Imposta la durata totale appena il file audio viene caricato
+  const handleLoadedMetadata = () => {
+    setDuration(audioRef.current.duration);
+  };
+
+  // Permette di spostarsi avanti e indietro cliccando sulla barra
+  const handleSeek = (e) => {
+    const newTime = Number(e.target.value);
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  // Utility per formattare i secondi in minuti:secondi (es. 0:00)
+  const formatTime = (timeInSeconds) => {
+    if (isNaN(timeInSeconds)) return "0:00";
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
   return (
@@ -55,12 +79,11 @@ function App() {
               <div 
                 className={`song-card ${currentSong?.id === song.id ? 'active' : ''}`} 
                 key={song.id}
-                onClick={() => handlePlaySong(song)} 
+                onClick={() => handlePlaySong(song)}
               >
                 <div className="card-image-container">
                   <img src={song.cover} alt={song.title} className="song-cover" />
                   <button className="play-btn">
-                    {/* Se la canzone cliccata è quella attiva ed è in play, mostra Pausa, altrimenti Play */}
                     {currentSong?.id === song.id && isPlaying ? '⏸' : '▶'}
                   </button>
                 </div>
@@ -74,12 +97,10 @@ function App() {
         </section>
       </main>
 
-      {/* --- 3. PLAYER BAR AGGIORNATA --- */}
       <footer className="player-bar">
         {currentSong ? (
           <div className="player-content">
             
-            {/* Sinistra: Info Canzone */}
             <div className="now-playing">
               <img src={currentSong.cover} alt="cover" className="now-playing-cover" />
               <div className="now-playing-info">
@@ -88,14 +109,28 @@ function App() {
               </div>
             </div>
 
-            {/* Centro: Controlli di riproduzione */}
+            {/* --- AREA CONTROLLI AGGIORNATA CON LA PROGRESS BAR --- */}
             <div className="player-controls">
-              <button className="control-btn play-pause-btn" onClick={togglePlayPause}>
-                {isPlaying ? '⏸' : '▶'}
-              </button>
+              <div className="player-buttons">
+                <button className="control-btn play-pause-btn" onClick={togglePlayPause}>
+                  {isPlaying ? '⏸' : '▶'}
+                </button>
+              </div>
+              
+              <div className="playback-bar">
+                <span className="time-text">{formatTime(currentTime)}</span>
+                <input 
+                  type="range" 
+                  className="progress-slider" 
+                  min="0" 
+                  max={duration || 0} 
+                  value={currentTime} 
+                  onChange={handleSeek} 
+                />
+                <span className="time-text">{formatTime(duration)}</span>
+              </div>
             </div>
 
-            {/* Destra: Spazio per il volume (placeholder per ora) */}
             <div className="player-volume">
                🔊 --
             </div>
@@ -106,10 +141,13 @@ function App() {
           </div>
         )}
 
-        {/* Motore Audio HTML5 nativo (Controllato dinamicamente tramite useRef) */}
+        {/* Hidden HTML5 Audio Instance - Managed via React useRef */}
         <audio
           ref={audioRef}
           src={currentSong?.audioUrl}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={() => setIsPlaying(false)} // Ferma la musica alla fine
         />
       </footer>
 
