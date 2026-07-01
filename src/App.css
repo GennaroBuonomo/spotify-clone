@@ -188,8 +188,7 @@ body{
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #ffffff;
-  color: #000000;
+  color: #ffffff;
   border: none;
   font-size: 1rem;
   cursor: pointer;
@@ -311,4 +310,76 @@ body{
 
 .play-pause-btn:active, .skip-btn:active {
   transform: scale(0.95);
+}
+
+/* --- STILI VOLUME --- */
+.player-volume {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 7px;
+  color: #b3b3b3;
+  cursor: pointer;
+}
+
+.volume-slider {
+  width: 100px;
+}
+
+/* --- STILI SIDEBAR --- */
+.sidebar-logo h2 {
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+  padding-left: 12px;
+  color: #ffffff;
+}
+
+.sidebar-nav ul, .sidebar-playlists ul {
+  list-style: none;
+}
+
+.sidebar-nav li, .sidebar-playlists li {
+  padding: 10px 12px;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sidebar-nav li:hover, .sidebar-playlists li:hover {
+  color: #ffffff;
+}
+
+.sidebar-nav li.active {
+  color: #ffffff;
+  background-color: #282828;
+  border-radius: 4px;
+}
+
+.create-playlist-btn {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.create-playlist-btn:hover {
+  color: #ffffff;
+}
+
+.sidebar-playlists {
+  margin-top: 24px;
+  border-top: 1px solid #282828;
+  padding-top: 8px;
 }

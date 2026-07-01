@@ -7,9 +7,11 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
   
   const audioRef = useRef(null);
 
+  // Gestione Autoplay e Pausa
   useEffect(() => {
     if (isPlaying && audioRef.current) {
       audioRef.current.play().catch(err => console.log("Errore autoplay:", err));
@@ -17,6 +19,13 @@ function App() {
       audioRef.current.pause();
     }
   }, [currentSong, isPlaying]);
+
+  // Gestione Volume in tempo reale
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   const handlePlaySong = (song) => {
     if (currentSong?.id === song.id) {
@@ -47,12 +56,9 @@ function App() {
     setCurrentTime(newTime);
   };
 
-  // --- LOGICA: AVANTI E INDIETRO ---
   const handleNextSong = () => {
     if (!currentSong) return;
-    // Troviamo la posizione della canzone attuale nell'array
     const currentIndex = songsData.findIndex(song => song.id === currentSong.id);
-    // Calcoliamo il prossimo indice (se siamo all'ultima, torna alla prima)
     const nextIndex = (currentIndex + 1) % songsData.length;
     setCurrentSong(songsData[nextIndex]);
     setIsPlaying(true);
@@ -61,12 +67,15 @@ function App() {
   const handlePrevSong = () => {
     if (!currentSong) return;
     const currentIndex = songsData.findIndex(song => song.id === currentSong.id);
-    // Calcoliamo l'indice precedente (se siamo alla prima, va all'ultima)
     const prevIndex = (currentIndex - 1 + songsData.length) % songsData.length;
     setCurrentSong(songsData[prevIndex]);
     setIsPlaying(true);
   };
-  // ----------------------------------------
+
+  // Aggiorna il volume dal range slider
+  const handleVolumeChange = (e) => {
+    setVolume(Number(e.target.value));
+  };
 
   const formatTime = (timeInSeconds) => {
     if (isNaN(timeInSeconds)) return "0:00";
@@ -78,11 +87,29 @@ function App() {
   return (
     <div className="spotify-layout">
       
+      {/* --- SIDEBAR COMPLETATA --- */}
       <aside className="sidebar">
-        <h2>Libreria</h2>
-        <ul>
-          <li>Le tue playlist</li>
-        </ul>
+        <div className="sidebar-logo">
+          <h2>🎧 SpotiClone</h2>
+        </div>
+        
+        <nav className="sidebar-nav">
+          <ul>
+            <li className="active">🏠 Home</li>
+            <li>🔍 Cerca</li>
+            <li>📚 La tua libreria</li>
+          </ul>
+        </nav>
+
+        <div className="sidebar-playlists">
+          <button className="create-playlist-btn">➕ Crea playlist</button>
+          <ul>
+            <li>Mix Rock Anni '90</li>
+            <li>Coding Session 💻</li>
+            <li>Relax & Focus</li>
+            <li>Le mie Hit</li>
+          </ul>
+        </div>
       </aside>
 
       <main className="main-view">
@@ -127,7 +154,6 @@ function App() {
             </div>
 
             <div className="player-controls">
-              {/* AREA BOTTONI  AVANTI/INDIETRO */}
               <div className="player-buttons">
                 <button className="control-btn skip-btn" onClick={handlePrevSong}>⏮</button>
                 <button className="control-btn play-pause-btn" onClick={togglePlayPause}>
@@ -150,8 +176,18 @@ function App() {
               </div>
             </div>
 
+            {/* --- CONTROLLO DEL VOLUME --- */}
             <div className="player-volume">
-               🔊 --
+               <span className="volume-icon">{volume === 0 ? '🔇' : '🔊'}</span>
+               <input 
+                  type="range" 
+                  className="progress-slider volume-slider" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={volume} 
+                  onChange={handleVolumeChange} 
+                />
             </div>
           </div>
         ) : (
@@ -166,7 +202,7 @@ function App() {
           src={currentSong?.audioUrl}
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}
-          onEnded={handleNextSong} 
+          onEnded={handleNextSong}
         />
       </footer>
 
