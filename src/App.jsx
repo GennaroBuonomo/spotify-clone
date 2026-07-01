@@ -114,7 +114,7 @@ function App() {
 
       <main className="main-view">
         <header className="main-header">
-          <h1>Buongiorno</h1>
+          <h1>Gennaro Buonomo</h1>
         </header>
         
         <section className="songs-container">
